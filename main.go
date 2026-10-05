@@ -1,0 +1,144 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"time"
+)
+
+type Article struct {
+	ID          int    `json:"id"`
+	Title       string `json:"title"`
+	PublishedAt string `json:"published_at"`
+	Content     string `json:"content"`
+}
+
+func (a *Article) EditArticleBody(description, title string) {
+	a.Content = description
+	a.Title = title
+}
+
+type PageHome struct {
+	Articles []Article
+}
+
+// JSON Path
+var jsonPath = "articles.json"
+
+// Loading articles from a File
+func loadArticles(path string) ([]Article, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return []Article{}, fmt.Errorf("The file does not exist")
+		}
+		return nil, fmt.Errorf("File read error: %w", err)
+	}
+
+	var articles []Article
+	if err := json.Unmarshal(data, &articles); err != nil {
+		return nil, fmt.Errorf("JSON parsing error: %w", err)
+	}
+	fmt.Println(articles, "loadArticles - ok")
+	return articles, nil
+}
+
+// Adding a New Task
+func addArticle(data *[]Article, content, title string) {
+	maxID := func(articles []Article) int {
+		maxId := 0
+		for _, a := range articles {
+			if a.ID > maxId {
+				maxId = a.ID
+			}
+		}
+		return maxId
+	}(*data)
+
+	newArticle := Article{
+		ID:          maxID + 1,
+		Title:       title,
+		Content:     content,
+		PublishedAt: time.Now().Format("2006-01-02 15:04:05"),
+	}
+
+	*data = append(*data, newArticle)
+
+	newData, err := json.MarshalIndent(*data, "", "  ")
+	if err != nil {
+		fmt.Println("serialization error:", err)
+		return
+	}
+
+	err = os.WriteFile(jsonPath, newData, 0644)
+	if err != nil {
+		fmt.Println("JSON writing error:", err)
+		return
+	}
+
+}
+
+// Editing the article description
+func editArticle(data *[]Article, id int, content, title string) {
+
+	for i, article := range *data {
+		if article.ID == id {
+			(*data)[i].EditArticleBody(content, title)
+
+			newData, err := json.MarshalIndent(*data, "", "  ")
+			if err != nil {
+				fmt.Println("serialization error:", err)
+				return
+			}
+
+			err = os.WriteFile(jsonPath, newData, 0644)
+			if err != nil {
+				fmt.Println("JSON writing error:", err)
+				return
+			}
+
+			return
+
+		}
+	}
+
+}
+
+func deleteArticle(data *[]Article, id int) {
+
+	for i, article := range *data {
+		if article.ID == id {
+			*data = append((*data)[:i], (*data)[i+1:]...)
+
+			newData, err := json.MarshalIndent(*data, "", "  ")
+			if err != nil {
+				fmt.Println("serialization error:", err)
+				return
+			}
+
+			err = os.WriteFile(jsonPath, newData, 0644)
+			if err != nil {
+				fmt.Println("JSON writing error:", err)
+				return
+			}
+
+			return
+
+		}
+	}
+}
+
+func main() {
+
+	fileServer := http.FileServer(http.Dir("./ui/static/"))
+	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
+
+	http.HandleFunc("/", handlerHome)
+	//http.HandleFunc("/api/data", handlerGetJson)
+
+	log.Println("Сервер запущен на http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}

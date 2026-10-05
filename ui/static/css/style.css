@@ -1,0 +1,170 @@
+/* ===== База ===== */
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 48px 20px;
+    background: #f2f4f7;
+    color: #17181a;
+    font-family: 'Comic Neue', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
+    font-weight: 700;
+}
+
+.card {
+    width: 100%;
+    max-width: 760px;
+    background: #f2f4f7;
+    border: 3px solid #17181a;
+    border-radius: 12px;
+    padding: 36px 44px;
+}
+
+h1 {
+    margin: 0 0 28px;
+    font-size: 42px;
+    letter-spacing: .5px;
+}
+
+/* ===== Список статей (home + admin) ===== */
+.article-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.article-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.article-title {
+    font-size: 24px;
+    color: #17181a;
+    text-decoration: none;
+}
+
+a.article-title:hover { text-decoration: underline; }
+
+.date {
+    color: #a3aebf;
+    font-size: 22px;
+    white-space: nowrap;
+}
+
+/* ===== Страница статьи ===== */
+.article-date {
+    margin: -14px 0 24px;
+    color: #a3aebf;
+    font-size: 24px;
+}
+
+.article-content p {
+    margin: 0 0 18px;
+    font-size: 24px;
+    line-height: 1.55;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: #a3aebf;
+    font-size: 20px;
+    text-decoration: none;
+}
+.back-link:hover { color: #17181a; }
+
+/* ===== Админка ===== */
+.admin-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.add-link {
+    font-size: 22px;
+    color: #17181a;
+    text-decoration: none;
+}
+.add-link:hover { text-decoration: underline; }
+
+.actions {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    white-space: nowrap;
+}
+
+.actions a {
+    color: #a3aebf;
+    font-size: 22px;
+    text-decoration: none;
+}
+.actions a:hover { color: #17181a; }
+
+/* Кнопка Delete выглядит как ссылка, но это POST-форма */
+.inline-form { display: inline; }
+
+.link-button {
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    font-size: 22px;
+    color: #a3aebf;
+    cursor: pointer;
+}
+.link-button:hover { color: #cc3333; }
+
+/* ===== Формы (new / edit) ===== */
+.article-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.article-form input,
+.article-form textarea {
+    font: inherit;
+    font-size: 22px;
+    color: #17181a;
+    background: transparent;
+    border: 3px solid #17181a;
+    border-radius: 10px;
+    padding: 12px 18px;
+    width: 100%;
+}
+
+.article-form textarea {
+    min-height: 340px;
+    resize: vertical;
+}
+
+.article-form input::placeholder,
+.article-form textarea::placeholder {
+    color: #17181a;
+    opacity: .85;
+}
+
+.article-form input:focus,
+.article-form textarea:focus {
+    outline: 3px solid #a3aebf;
+}
+
+.article-form button {
+    align-self: flex-start;
+    font: inherit;
+    font-size: 22px;
+    padding: 10px 34px;
+    background: transparent;
+    border: 3px solid #17181a;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.article-form button:hover { background: #e4e8ee; }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Blog</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <main class="card">
+        <h1>Personal Blog</h1>
+
+        <ul class="article-list">
+            {{range .Articles}}
+            <li class="article-row">
+                <a class="article-title" href="/article/{{.ID}}">{{.Title}}</a>
+                <span class="date">{{.PublishedAt}}</span>
+            </li>
+            {{else}}
+            <li class="article-row">
+                <span class="article-title">No articles yet</span>
+            </li>
+            {{end}}
+        </ul>
+    </main>
+</body>
+</html>

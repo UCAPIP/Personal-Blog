@@ -1,0 +1,12 @@
+[{
+    "id": 0,
+    "title": "Test1",
+    "published_at": "05.10.2026",
+    "content": "The first article"
+},
+{
+    "id": 1,
+    "title": "Test2",
+    "published_at": "05.10.2026",
+    "content": "The second article"
+}]
