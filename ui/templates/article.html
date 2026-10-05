@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - Personal Blog</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <main class="card">
+        <h1>{{.Title}}</h1>
+        <p class="article-date">{{.PublishedAt}}</p>
+        <div class="article-content">
+            <p>{{.Content}}</p>
+        </div>
+        <a class="back-link" href="/">← Back to home</a>
+    </main>
+</body>
+</html>

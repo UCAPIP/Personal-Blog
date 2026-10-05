@@ -131,13 +131,22 @@ func deleteArticle(data *[]Article, id int) {
 	}
 }
 
+func findArticle(data *[]Article, id int) (Article, error) {
+	for i, article := range *data {
+		if article.ID == id {
+			return (*data)[i], nil
+		}
+	}
+	return (*data)[0], fmt.Errorf("Article doesn't exist")
+}
+
 func main() {
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 
 	http.HandleFunc("/", handlerHome)
-	//http.HandleFunc("/api/data", handlerGetJson)
+	http.HandleFunc("/article/{id}", handlerArticle)
 
 	log.Println("Сервер запущен на http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
