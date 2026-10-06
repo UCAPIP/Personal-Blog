@@ -147,6 +147,7 @@ func main() {
 
 	http.HandleFunc("/", handlerHome)
 	http.HandleFunc("/article/{id}", handlerArticle)
+	http.HandleFunc("/admin", basicAuth(handlerAdmin))
 
 	log.Println("Сервер запущен на http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

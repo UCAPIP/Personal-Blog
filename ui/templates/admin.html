@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Personal Blog</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <main class="card">
+        <div class="admin-header">
+            <h1>Personal Blog</h1>
+            <a class="add-link" href="/admin/new">+ Add</a>
+        </div>
+
+        <ul class="article-list">
+            {{range .Articles}}
+            <li class="article-row">
+                <a class="article-title" href="/article/{{.ID}}">{{.Title}}</a>
+                <span class="actions">
+                    <a href="/admin/edit/{{.ID}}">Edit</a>
+                    <form class="inline-form" method="POST" action="/admin/delete/{{.ID}}">
+                        <button type="submit" class="link-button">Delete</button>
+                    </form>
+                </span>
+            </li>
+            {{else}}
+            <li class="article-row">
+                <span class="article-title">No articles yet</span>
+            </li>
+            {{end}}
+        </ul>
+    </main>
+</body>
+</html>
