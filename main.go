@@ -16,9 +16,10 @@ type Article struct {
 	Content     string `json:"content"`
 }
 
-func (a *Article) EditArticleBody(description, title string) {
+func (a *Article) EditArticleBody(description, title, date string) {
 	a.Content = description
 	a.Title = title
+	a.PublishedAt = date
 }
 
 type PageHome struct {
@@ -82,11 +83,10 @@ func addArticle(data *[]Article, content, title string) {
 }
 
 // Editing the article description
-func editArticle(data *[]Article, id int, content, title string) {
-
+func editArticle(data *[]Article, id int, content, title, date string) {
 	for i, article := range *data {
 		if article.ID == id {
-			(*data)[i].EditArticleBody(content, title)
+			(*data)[i].EditArticleBody(content, title, date)
 
 			newData, err := json.MarshalIndent(*data, "", "  ")
 			if err != nil {
@@ -148,6 +148,8 @@ func main() {
 	http.HandleFunc("/", handlerHome)
 	http.HandleFunc("/article/{id}", handlerArticle)
 	http.HandleFunc("/admin", basicAuth(handlerAdmin))
+	http.HandleFunc("/admin/edit/{id}", basicAuth(hadlerFormEdit))
+	http.HandleFunc("POST /admin/edit/{id}/update", basicAuth(handlerUpdate))
 
 	log.Println("Сервер запущен на http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

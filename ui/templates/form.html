@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Heading}} - Personal Blog</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <main class="card">
+        <h1>{{.Heading}}</h1>
+
+        <form class="article-form" method="POST" action="{{.FormAction}}">
+            <input type="text" name="title" placeholder="Article Title"
+                   value="{{.Title}}" required>
+
+            <input type="date" name="published_at"
+                   value="{{.PublishedAt}}" required>
+
+            <textarea name="content" placeholder="Content" required>{{.Content}}</textarea>
+
+            <button type="submit">{{.SubmitLabel}}</button>
+        </form>
+    </main>
+</body>
+</html>

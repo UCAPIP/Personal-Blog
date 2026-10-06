@@ -1,12 +1,14 @@
-[{
+[
+  {
     "id": 0,
-    "title": "Test1",
-    "published_at": "05.10.2026",
-    "content": "The first article"
-},
-{
+    "title": "123",
+    "published_at": "2026-09-28",
+    "content": "123"
+  },
+  {
     "id": 1,
     "title": "Test2",
-    "published_at": "05.10.2026",
+    "published_at": "2026-09-28",
     "content": "The second article"
-}]
+  }
+]
