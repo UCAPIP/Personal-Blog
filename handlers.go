@@ -200,7 +200,7 @@ func handlerUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("Сохраняем статью: Title=%s, Date=%s", title, publishedAt)
+	log.Printf("Save the article: Title=%s, Date=%s", title, publishedAt)
 
 	formattedJson, err := loadArticles(jsonPath)
 	if err != nil {
@@ -219,4 +219,51 @@ func handlerUpdate(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 	fmt.Printf("handlerUpdate id %d - success", id)
+}
+
+func hadlerFormNew(w http.ResponseWriter, r *http.Request) {
+
+	var newArticle = FormData{
+		Heading:     "New Article",
+		FormAction:  "new/publish",
+		SubmitLabel: "Publish",
+	}
+
+	tmpl, err := template.ParseFiles("ui/templates/form.html")
+	if err != nil {
+		http.Error(w, "Template not found", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	tmpl.Execute(w, newArticle)
+	fmt.Println("hadlerFormNew - success")
+}
+
+func handlerPublish(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "The method is not supported", http.StatusMethodNotAllowed)
+		return
+	}
+
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Form Data Processing Error", http.StatusBadRequest)
+		return
+	}
+
+	title := r.PostFormValue("title")
+	publishedAt := r.PostFormValue("published_at") // "YYYY-MM-DD"
+	content := r.PostFormValue("content")
+
+	formattedJson, err := loadArticles(jsonPath)
+	if err != nil {
+		log.Printf("ERROR: Unable to load articles from %s: %v", jsonPath, err)
+		http.Error(w, "Internal server error: Unable to load data", http.StatusInternalServerError)
+		return
+	}
+
+	addArticle(&formattedJson, content, title, publishedAt)
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	fmt.Println("handlerPublish - success")
 }

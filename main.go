@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
 type Article struct {
@@ -47,8 +46,8 @@ func loadArticles(path string) ([]Article, error) {
 	return articles, nil
 }
 
-// Adding a New Task
-func addArticle(data *[]Article, content, title string) {
+// Adding a New Article
+func addArticle(data *[]Article, content, title, date string) {
 	maxID := func(articles []Article) int {
 		maxId := 0
 		for _, a := range articles {
@@ -63,7 +62,7 @@ func addArticle(data *[]Article, content, title string) {
 		ID:          maxID + 1,
 		Title:       title,
 		Content:     content,
-		PublishedAt: time.Now().Format("2006-01-02 15:04:05"),
+		PublishedAt: date,
 	}
 
 	*data = append(*data, newArticle)
@@ -150,6 +149,8 @@ func main() {
 	http.HandleFunc("/admin", basicAuth(handlerAdmin))
 	http.HandleFunc("/admin/edit/{id}", basicAuth(hadlerFormEdit))
 	http.HandleFunc("POST /admin/edit/{id}/update", basicAuth(handlerUpdate))
+	http.HandleFunc("/admin/new", basicAuth(hadlerFormNew))
+	http.HandleFunc("POST /admin/new/publish", basicAuth(handlerPublish))
 
 	log.Println("Сервер запущен на http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
