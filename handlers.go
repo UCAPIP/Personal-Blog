@@ -267,3 +267,28 @@ func handlerPublish(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 	fmt.Println("handlerPublish - success")
 }
+
+func handlerDelete(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "The method is not supported", http.StatusMethodNotAllowed)
+		return
+	}
+
+	formattedJson, err := loadArticles(jsonPath)
+	if err != nil {
+		log.Printf("ERROR: Unable to load articles from %s: %v", jsonPath, err)
+		http.Error(w, "Internal server error: Unable to load data", http.StatusInternalServerError)
+		return
+	}
+
+	idStr := r.PathValue("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid article ID", http.StatusBadRequest)
+		return
+	}
+
+	deleteArticle(&formattedJson, id)
+	fmt.Println("handlerDelete - success")
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+}

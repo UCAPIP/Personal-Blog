@@ -151,6 +151,7 @@ func main() {
 	http.HandleFunc("POST /admin/edit/{id}/update", basicAuth(handlerUpdate))
 	http.HandleFunc("/admin/new", basicAuth(hadlerFormNew))
 	http.HandleFunc("POST /admin/new/publish", basicAuth(handlerPublish))
+	http.HandleFunc("POST /admin/delete/{id}", basicAuth(handlerDelete))
 
 	log.Println("Сервер запущен на http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
