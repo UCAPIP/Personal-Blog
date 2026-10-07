@@ -38,35 +38,6 @@ func handlerHome(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(data, "handlerHome - ok")
 }
 
-func handlerGetJson(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.NotFound(w, r)
-		return
-	}
-
-	formattedJson, err := loadArticles(jsonPath)
-	if err != nil {
-		log.Printf("ERROR: Unable to load articles from %s: %v", jsonPath, err)
-		http.Error(w, "Internal server error: Unable to load data", http.StatusInternalServerError)
-		return
-	}
-
-	data := PageHome{
-		Articles: formattedJson,
-	}
-
-	tmpl, err := template.ParseFiles("ui/index.html")
-	if err != nil {
-		http.Error(w, "Template not found: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	tmpl.Execute(w, data)
-
-	fmt.Println(data, "handlerGetJson - ok")
-}
-
 func handlerArticle(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("handlerArticle - starts")
 	idStr := r.PathValue("id")
@@ -138,7 +109,7 @@ type FormData struct {
 	PublishedAt string
 }
 
-func hadlerFormEdit(w http.ResponseWriter, r *http.Request) {
+func handlerFormEdit(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -221,7 +192,7 @@ func handlerUpdate(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("handlerUpdate id %d - success", id)
 }
 
-func hadlerFormNew(w http.ResponseWriter, r *http.Request) {
+func handlerFormNew(w http.ResponseWriter, r *http.Request) {
 
 	var newArticle = FormData{
 		Heading:     "New Article",
@@ -255,6 +226,11 @@ func handlerPublish(w http.ResponseWriter, r *http.Request) {
 	title := r.PostFormValue("title")
 	publishedAt := r.PostFormValue("published_at") // "YYYY-MM-DD"
 	content := r.PostFormValue("content")
+
+	if title == "" || publishedAt == "" || content == "" {
+		http.Error(w, "All fields must be filled in", http.StatusBadRequest)
+		return
+	}
 
 	formattedJson, err := loadArticles(jsonPath)
 	if err != nil {
